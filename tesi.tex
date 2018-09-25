@@ -1,0 +1,125 @@
+\documentclass[12pt]{report}
+\usepackage[lofdepth,lotdepth]{subfig}
+\usepackage{graphicx}
+\usepackage{verbatim}
+\usepackage[utf8]{inputenc}
+\usepackage[english,italian]{babel}
+\usepackage{amsfonts}
+\usepackage{color}
+\usepackage{indentfirst}
+\usepackage{makeidx}
+\usepackage{listings}
+\usepackage{fancyhdr}
+\usepackage{amssymb}
+\usepackage{textcomp}
+\usepackage{caption}
+\usepackage{url}
+\setlength{\headheight}{15pt}
+\lstset{postbreak=\space, breakindent=5pt, breaklines}
+
+\date{}
+\newcommand{\CB}{CIBIR}
+
+% Per avere il bold typewriter
+\DeclareFontShape{OT1}{cmtt}{bx}{n}{ <5><6><7><8><9><10><10.95><12><14.4><17.28><20.74><24.88>cmttb10}{}
+
+\lstdefinestyle{c}{
+	language=Java,
+	basicstyle=\footnotesize,
+	keywordstyle=\bfseries,
+	identifierstyle=\ttfamily,
+	stringstyle=\ttfamily,
+	captionpos=b,
+	abovecaptionskip=15pt,
+	showstringspaces=false
+}
+
+\usepackage{amsmath}
+
+\usepackage[top=5.3cm, bottom=2cm, left=4cm, right=3cm]{geometry}
+\newcommand{\citazione}[1]{``#1''}
+\makeindex
+
+\begin{document}
+\pagenumbering{Roman}
+\include{frontespizio} % frontespizio
+
+\input{Capitoli/Dedica}
+\newpage
+
+\pagestyle{plain}
+\input{Capitoli/Abstract} %%%% METTERE ??
+\newpage
+
+\selectlanguage{italian}
+\setlength{\baselineskip}{1.60\baselineskip} % interlinea
+
+\tableofcontents
+\listoffigures
+%\listoftables % MI SA CHE è INUTILE
+\lstlistoflistings
+
+\clearpage
+\clearpage
+\pagenumbering{arabic}
+% Intestazione con fancy header, eliminato intestazione sinistra
+\pagestyle{fancy}
+\lhead{}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter*{Introduzione}
+\label{c:intro}
+\input{Capitoli/Introduzione}
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Stato dell'Arte}
+\label{c:tec} 
+\input{Capitoli/Tecnologie}
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{GRIDS System}
+\label{c:grids}
+\input{Capitoli/GRIDS}
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Integrazione del GRIDS System con la Blockchain}
+\label{c:integr}
+\input{Capitoli/Integrazione}
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Valutazione delle performance}
+\label{c:eval}
+\input{Capitoli/Calcoli}
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Conclusioni e sviluppi futuri}
+\label{c:end}
+\input{Capitoli/Conclusioni}
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\chapter*{Ringraziamenti}
+%\label{chap:Ringraziamenti}
+%\input{Capitoli/Ringraziamenti}
+%\newpage
+
+\addcontentsline{toc}{chapter}{References}
+\addcontentsline{toc}{chapter}{Indice Analitico}
+\bibliographystyle{ieeetr}
+\bibliography{biblio}
+
+\printindex
+
+\end{document}
