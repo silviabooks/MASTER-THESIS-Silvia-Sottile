@@ -1,9 +1,20 @@
-grafici ritardi!!
+Una volta concluso lo sviluppo del GRIDS System con Blockchain integrata, è indispensabile valutarne le performance.
 
-Provare con 100 trx "lente"
+Verrà misurato il tempo che intercorre tra il momento in cui il client effettua la richiesta di data e quello in cui la transazione viene confermata e l'utente può visualizzare i dati.
+
+Una considerazione molto importante da fare è che, nel caso delle transazioni "lente", vi è una sorta di problema di "campionamento": visto che nella Testnet i blocchi vengono estratti ogni circa 20 minuti, il tempo di ritardo varierà in base a quanto tempo prima è stato risolto l'ultimo blocco della blockchain.
+
+%%
+Ho provato con 100 transazioni standard e alcune di esse sono state respinte per mempool error: non ci entravano più nel mempool! Vedere https://www.mycry ptopedia.com/mempool-explained/ per la spiegazione.
+
+Quindi ho ridotto a 50.. o ancora meglio a 20...
+
+Però in ogni caso la piattaforma ha il meccanismo recharge, quindi il problema non si pone...
+%%
+
+
+Provare con 50 trx "lente"
 
 Poi con 100 trx "veloci"
 
-E poi vediamo i tre grafici
-
-PROVARE CON 2 PC?????????????????????????????????
+E poi vediamo i tre grafici: ritardo client-side delle trx standard, ritardo totale delle trx standard, ritardo totale delle transazioni veloci
