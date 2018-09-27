@@ -58,8 +58,7 @@ Gli elementi principali che compongono la logica del RM sono i seguenti (figura 
 \label{f:grids:scambiomex}
 \end{figure}
 
-Le funzioni di relationship management si affidano su due procedure di message-forwarding:
-
+Le funzioni di \textit{relationship management} si affidano su due procedure di message-forwarding, che sono le seguenti:
 \begin{itemize}
     \item \textit{New friendship alert}: generato e ricevuto quando viene stabilita un'amicizia tra due SVE che risiedono in diversi RM. Di conseguenza, un RM invia all'altro informazioni come: Entity ID, metadati, tipo di relazione, SVE locator e il locator del GRIDS-MS locator dell'amico che deve essere aggiunto nella FT della SVE di destinazione;
     \item \textit{Event alert}: trasmette informazioni circa alcuni eventi relativi a una SVE e che potrebbe causare la creazione di una nuova relazione. Queste informazioni devono essere valutate dai RM delle entità coinvolte (o dal singolo RM se le SVE risiedono nello stesso RM). Visto che non sempre sono noti i RM interessati a certi eventi, questa informazione dovrebbe essere diffusa a tutti i RM potenzialmente interessati. per fare ciò si utilizza il Pub/Sub System (PSS), come mostrato nella figura \ref{f:grids:scambiomex}. L'EventID in figura identifica l'argomento di interesse, per esempio: EventID=“AP address A677.7BCD.F345”. Questa informazione viene diffusa cosicch\'e gli altri RM sanno che quell'entità ricade sotto la copertura dell'AP con MAC address A677.7BCD.F345.
@@ -68,16 +67,13 @@ Le funzioni di relationship management si affidano su due procedure di message-f
 \section{Implementazione}
 \label{c:grids:implementation}
 
-L'implementazione del GRIDS System è stata realizzata nel linguaggio Java. Nello specifico, è stato utilizzato Java Enterprise Edition per creare un modulo Web.
-Esso è stato deployato su un Application Server, nel nostro caso si tratta di Glassfish 5.0.0, che è pensato appositamente per le implementazioni della Java Platform.
+L'implementazione del GRIDS System è stata realizzata nel linguaggio Java. Nello specifico, è stato utilizzato Java Enterprise Edition per creare una Web Application, la quale è stata deployata su un Application Server: nel nostro caso si tratta di Glassfish 5.0.0, che è pensato appositamente per le implementazioni della Java Platform.
 
-% ALTRO?
+Il sistema è distribuito su più macchine, le quali comunicano tramite RMI\footnote{https://docs.oracle.com/javase/tutorial/rmi/index.html} (\textit{Remote Method Invocation}), una tecnologia il cui scopo è quello di rendere trasparenti al programmatore i dettagli della comunicazione in rete. I nodi prendono il nome di Server, e sono interconnessi tra loro per formare una rete peer-to-peer. Ognuno di essi viene identificato dal Server ID.
 
-Il sistema è distribuito su più macchine, le quali comunicano tramite RMI\footnote{https://docs.oracle.com/javase/tutorial/rmi/index.html} (\textit{Remote Method Invocation}), una tecnologia il cui scopo è quello di rendere trasparenti al programmatore i dettagli della comunicazione in rete. I nodi prendono il nome di Server, e sono interconnessi tra loro per formare una rete peer to peer. Ognuno di essi viene identificato dal Server ID.
+La classe in cui vengono definiti i metodi remoti è \textit{GridsSystem}, che implementa l'interfaccia root RMI. Nel listing \ref{gridssys} è riportata la struttura del codice di questa classe.
 
-La classe in cui vengono definiti i \textit{remote methods} è \textit{GridsSystem}, che implementa l'interfaccia root RMI. Nel listing \ref{gridssys} è riportata la struttura del codice di questa classe.
-La classe \textit{CustomSimulation} contiene il metodo initNetwork() per inizializzare il Server: viene creata un'istanza di GridsSystems e viene effettuato il lookup dell'interfaccia RMI remota per la registrazione del server, richiamando il metodo remoto della classe GridsSystem. Il tutto viene avviato tramite la GUI contenuta nella classe \textit{EngineSimulator}.
-
+La classe \textit{CustomSimulation} contiene il metodo initNetwork() per inizializzare il Server: viene creata un'istanza di GridsSystems e viene effettuato il lookup dell'interfaccia RMI remota per la registrazione del server, richiamando il metodo remoto della classe GridsSystem. Il tutto viene avviato tramite la GUI contenuta nella classe \textit{EngineSimulator}, mostrata nel paragrafo successivo in figura \ref{f:grids:gui1}.
 Sempre nella funzione initNetwork() vengono instaurate le relazioni tra i nodi, in pieno accordo con il paradigma Social IoT. I parametri utilizzati nella creazione delle relazioni sono le coordinate geografiche dei nodi (che si ottengono dalle informazioni contenute nelle piattaforme IoT che "ospitano" i nodi) e le probabilità di creazione delle relazioni (fornite attraverso il file di configurazione \textit{probabilities.ini}). Per esigenze di testing, i tipi di relazioni (come ad esempio OOR, SOR, CLOR) sono assegnati casualmente.
 
 \begin{lstlisting}[caption={GridsSystem.java},label={gridssys},style={c}]
@@ -111,6 +107,8 @@ Oltre queste, è disponibile una risorsa REST per poter consultare i dati non so
 Ciò è possibile grazie alla presenza del database MySQL con cui il sistema interagisce attraverso la classe \textit{GridsRS}, ossia il Relationship Manager della specifica, e alla classe \textit{Server}. Quest'ultima implementa un'ulteriore interfaccia RMI, riportata qui di seguito nel listing \ref{rmiInterface}.
 
 
+
+
 \begin{lstlisting}[caption={RMIInterface.java},label={rmiInterface},style={c}]
 
 public interface RMIInterface extends Remote {
@@ -124,18 +122,15 @@ public interface RMIInterface extends Remote {
 }
 \end{lstlisting}
 
-La classe Server contiene anche gli attributi che caratterizzano il nodo stesso, i quali sono: l'ID, l'indirizzo IP, il GridsRS, il GridsMS, ossia BOH 
-%%%%%%%%%%%%%%%%%%%%
-e il RelBrowser, che è l'oggetto responsabile della navigazione nel grafo delle relazioni sociali tra i nodi.
-
-Oltre al RelBrowser, altre classi utili per la navigazione delle relazioni sociali sono \textit{FriendTableEntry} e \textit{SVE}: la prima contiene informazioni riguardo i locator della SVE, come lo SVE\_locator, il GRIDS\_MS\_Locator, mentre la seconda%%%%%%%%%%%%%
+La classe \textit{Server} contiene anche gli attributi che caratterizzano il nodo stesso, i quali sono: l'ID, l'indirizzo IP, il GridsRS, il GridsMS (\textit{GRIDS Mapping Service}), che di fatto realizza la corrispondenza tra ID del nodo e indirizzo IP corrispondente, e il \textit{RelBrowser}, che è l'oggetto responsabile della navigazione nel grafo delle relazioni sociali tra i nodi.
+Oltre al \textit{RelBrowser}, altre classi utili per la navigazione delle relazioni sociali sono \textit{FriendTableEntry} e \textit{SVE}, che saranno descritte più avanti.
 
 Per poter accedere ai dati predenti nei canali Thingspeak o alle risorse di FESTIVAL sono disponibili delle librerie apposite.
 
-Per quanto riguarda la parte di Data Access, essa è composta da due database: \textit{social\_iot\_platform} e \textit{social\_iot\_platform\_sve}. Il primo contiene la tabella denominata sver, la quale contiene l'elenco dei Client che fanno riferimento allo stesso SVER, che di fatto è il Server che contiene la tabella stessa. Le colonne sono composte dai seguenti campi:
+Per quanto riguarda il livello di \textit{Data Access}, essa è composta da due database: \textit{social\_iot\_platform} e \textit{social\_iot\_platform\_sve}. Il primo contiene la tabella denominata sver, la quale contiene l'elenco dei Client che fanno riferimento allo stesso SVER, che di fatto è il Server che contiene la tabella stessa. Le colonne sono composte dai seguenti campi:
 
 \begin{itemize}
-    \item channel: codice che identifica, nel caso in cui il nodo sia virtualizzato da Thingspeak, il canale della piattaforma:
+    \item \textbf{channel}: codice che identifica, nel caso in cui il nodo sia virtualizzato da Thingspeak, il canale della piattaforma:
     \item \textbf{uid}: ID del client;
     \item areas: coordinate geografiche nelle quali è posizionato il nodo;
     \item \textbf{ip}: sempre nel caso si tratti di Thingspeak, è l'indirizzo web del nodo (ad esempio: https://thingspeak.com/channels/156761);
@@ -154,23 +149,25 @@ Il database \textit{social\_iot\_platform\_sve}, invece, contiene un numero di t
 \end{itemize}
 
 Le classi necessarie per realizzare il mapping con il database sono le seguenti: 
-
 \begin{itemize}
     \item la classe \textit{Client}, che mappa le SVE, in particolare i record della tabella sver;
     \item la classe \textit{FriendTableEntry}, che rappresenta il singolo record contenuto nelle tabelle del database social\_iot\_platform\_sve;
     \item \textit{SVE}, lista di FriendTableEntry.
 \end{itemize}
 
-Notare che, anche se contengono dati diversi, le classi Client e SVE rappresentano lo stesso concetto.
+Notare che, anche se contengono dati diversi, le classi Client e SVE rappresentano lo stesso concetto: la virtualizzazione del nodo IoT visto sia come entità sociale, sia come semplice dispositivo.
 
 Il driver utilizzato per l'interazione tra il codice Java e il database MySQL è JDBC\footnote{https://www.oracle.com/technetwork/java/javase/jdbc/index.html} (\textit{Java Database Connectivity}), che fornisce una serie di API per effettuare query e per aggiornare dati in un database, ed è orientato per database relazionali.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-TO DO:
+In figura \ref{f:grids:diagramma} è possibile osservare il diagramma delle classi principali dell'architettura del Grids System. Notare che sono raffigurate soltanto le classi, i metodi e gli attributi necessari per la descrizione del sistema: le classi delle librerie di Thingspeak e FESTIVAL, per esempio, sono state omesse per semplicità.
 
-- chiedere a Salvo che cos'è il GRIDS MS
 
-- diagramma delle classi
+\begin{figure}[h!t]
+\centerline{\includegraphics[width=\textwidth]{img/initialDiagramCorrect}}
+\caption{Diagramma delle classi del Grids System}
+\label{f:grids:diagramma}
+\end{figure}
+
 
 \section{Caso d'uso d'esempio}
 \label{c:grids:usecase}
@@ -179,10 +176,19 @@ Per effettuare il deployment della piattaforma è necessario aprire il progetto 
 
 Fatto ciò, bisogna settare correttamente gli indirizzi IP di Server, Gateway e SVER e l'ID del server. Nel caso d'uso base, visto che il Server avviato è solo uno, l'ID è pari a 0. 
 
-Poi bisogna avviare il progetto, il quale verrà deployato sul Glassfish server, e l'interfaccia grafica, raffigurata in figura%%%%%%.
+\begin{figure}[h!t]
+\centerline{\includegraphics[scale=2.5]{img/gui1}}
+\caption{GUI del Grids System}
+\label{f:grids:gui1}
+\end{figure}
 
+Poi bisogna avviare il progetto, il quale verrà deployato sul Glassfish server, e l'interfaccia grafica, raffigurata in figura \ref{f:grids:gui1}.
+Per avviare la piattaforma, bisogna cliccare sugli appositi jButton \textit{Run Platform} e \textit{Create Relationship}, rispettivamente per effettuare la configurazione RMI e per creare le relazioni tra le Social Virtual Entities. Infine, cliccando sul tasto \textit{View Graph} è possibile visualizzare il grafo delle relazioni, come raffigurato in figura \ref{f:grids:gui2}. È possibile selezionare i singoli nodi del grafo per visualizzare un'ulteriore finestra in cui sono contenute le informazioni della SVE corrispondente.
 
-Cliccare sul bottone e Start Platform, Create Relationship, View Graph
+\begin{figure}[h!t]
+\centerline{\includegraphics[width=\textwidth]{img/gui2}}
+\caption{Grafo delle relazioni SIoT}
+\label{f:grids:gui2}
+\end{figure}
 
-screenshottare il graph
-
+Nel capitolo successivo, la struttura appena presentata verrà ampliata e arricchita per contenere un wallet Bitcoin, e quindi la possibilità di ricevere denaro dagli utenti che si connetteranno alla rete SIoT e di inviarlo ai proprietari di dispositivi smart che espongono tramite questa piattaforma.

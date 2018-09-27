@@ -117,7 +117,27 @@ Nel caso d'uso considerato per lo sviluppo del sistema, con questa richiesta ver
 
 Come ho modificato i DB per integrare le trx
 
-- nuovo DB: social\_iot\_platform\_transaction e 4 tabelle.....
+- nuovo DB: social\_iot\_platform\_transaction e 4 tabelle
+
+Tabella "completed":
+
+- TrxHash
+
+- content
+
+Tabella "unconfirmed":
+
+- TrxHash
+
+- SVER\_ID e SVE\_ID
+
+Tabella "creditCharges":
+
+- trxHash 	userID 	credit 	isConfirmed 
+
+Tabella "readAPIkeys":
+
+- SVE\_ID   SVER\_ID   readAPIkey
 
 \section{RMI registry}
 \label{c:integr:rmi}
@@ -149,12 +169,18 @@ Cascata di codice e diagrammi!
 Tocco finale
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-TO DO:
+\section{TO DO:}
 
-- super schema
-- diagramma classi
+- super schema COME LO FACCIO?
+
+- diagramma classi FATTO 
 
 \section{Casi d'uso}
 \label{c:integr:useCase}
 
 Mettere l'acquisto lento, la ricarica, e l'acquisto veloce
+
+
+ALTRO:
+- dire del problema che bisogna aspettare la conferma delle trx di volta in volta, quindi si è pensato di velocizzare l'acquisto dei dati con metodo "a ricarica".
+- pippotto sulla chiave
