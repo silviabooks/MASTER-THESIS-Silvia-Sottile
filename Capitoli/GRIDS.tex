@@ -33,7 +33,7 @@ La relazione tra due entità (e quindi tra le rispettive SVE) viene stabilita in
 \subfloat[Elementi del RM]{
 \includegraphics[height=100pt]{img/rma}
 \label{f:grids:rma}}
-\qquad % togliere se voglio far lievitare le pagine 
+\qquad
 \subfloat[Componenti della logica del RM]{
 \includegraphics[height=100pt]{img/rmb}
 \label{f:grids:rmb}}
@@ -58,7 +58,8 @@ Gli elementi principali che compongono la logica del RM sono i seguenti (figura 
 \label{f:grids:scambiomex}
 \end{figure}
 
-Le funzioni di \textit{relationship management} si affidano su due procedure di message-forwarding, che sono le seguenti:
+Le funzioni di \textit{relationship management} si affidano su due procedure di message forwarding, che sono le seguenti:
+
 \begin{itemize}
     \item \textit{New friendship alert}: generato e ricevuto quando viene stabilita un'amicizia tra due SVE che risiedono in diversi RM. Di conseguenza, un RM invia all'altro informazioni come: Entity ID, metadati, tipo di relazione, SVE locator e il locator del GRIDS-MS locator dell'amico che deve essere aggiunto nella FT della SVE di destinazione;
     \item \textit{Event alert}: trasmette informazioni circa alcuni eventi relativi a una SVE e che potrebbe causare la creazione di una nuova relazione. Queste informazioni devono essere valutate dai RM delle entità coinvolte (o dal singolo RM se le SVE risiedono nello stesso RM). Visto che non sempre sono noti i RM interessati a certi eventi, questa informazione dovrebbe essere diffusa a tutti i RM potenzialmente interessati. per fare ciò si utilizza il Pub/Sub System (PSS), come mostrato nella figura \ref{f:grids:scambiomex}. L'EventID in figura identifica l'argomento di interesse, per esempio: EventID=“AP address A677.7BCD.F345”. Questa informazione viene diffusa cosicch\'e gli altri RM sanno che quell'entità ricade sotto la copertura dell'AP con MAC address A677.7BCD.F345.
@@ -106,9 +107,6 @@ Oltre queste, è disponibile una risorsa REST per poter consultare i dati non so
 
 Ciò è possibile grazie alla presenza del database MySQL con cui il sistema interagisce attraverso la classe \textit{GridsRS}, ossia il Relationship Manager della specifica, e alla classe \textit{Server}. Quest'ultima implementa un'ulteriore interfaccia RMI, riportata qui di seguito nel listing \ref{rmiInterface}.
 
-
-
-
 \begin{lstlisting}[caption={RMIInterface.java},label={rmiInterface},style={c}]
 
 public interface RMIInterface extends Remote {
@@ -132,7 +130,7 @@ Per quanto riguarda il livello di \textit{Data Access}, essa è composta da due 
 \begin{itemize}
     \item \textbf{channel}: codice che identifica, nel caso in cui il nodo sia virtualizzato da Thingspeak, il canale della piattaforma:
     \item \textbf{uid}: ID del client;
-    \item areas: coordinate geografiche nelle quali è posizionato il nodo;
+    \item \textbf{areas}: coordinate geografiche nelle quali è posizionato il nodo;
     \item \textbf{ip}: sempre nel caso si tratti di Thingspeak, è l'indirizzo web del nodo (ad esempio: https://thingspeak.com/channels/156761);
     \item \textbf{meta}: eventuali metadati (ad esempio una descrizione del nodo);
     \item \textbf{server}: ID del server che contiene la SVE;
