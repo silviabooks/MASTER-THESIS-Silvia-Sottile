@@ -1,7 +1,26 @@
 \section{Modello teorico}
 \label{c:integr:model}
 
-TO DO
+TO DO immagine del modello
+
+Prima di cominciare lo sviluppo, è di vitale importanza pensare al modello di integrazione della blockchain nel sistema, rappresentato in figura \ref{f:integr:modello}. 
+
+Verrà creata un'applicazione che sarà utilizzata dall'utente finale per comprare i dati dei nodi della rete. 
+Ognuna di esse è in grado di effettuare le transazioni, che saranno poi incluse nella blockchain. Ogni utente, attraverso l'applicazione, si connette con un nodo Server del GRIDS System. Quest'ultimo è incaricato di prendere i dati delle SVE che ospita (il Server stesso o gli altri Server della rete SIoT), attraverso i meccanismi di discovery descritti nel capitolo \ref{c:grids}, e di restituire i risultati all'utente finale. 
+
+I proprietari dei nodi virtualizzati ed esposti attraverso la rete SIoT riceveranno il denaro virtuale, ma il GRIDS System terrà per sè una piccola percentuale del prezzo presentato all'utente finale.
+
+I dati che verranno scambiati sono: l'utente fornisce ID del nodo a cui è interessato, il server risponderà con il prezzo dei dati corrispondenti. L'utente, venuto a conoscenza del prezzo, effettuerà la transazione e riceverà in cambio i dati del nodo IoT, oppure, nel caso si tratti di un nodo che appartiene a un canale Thingspeak, la readAPIkey con la quale l'utente potrà andare a leggere i dati autonomamente attraverso la piattaforma.
+
+In sostanza, non vengono acquistati i dati direttamente dal sensore, ma viene aggiunto un livello di indirezione tra utente e nodo IoT, mantenendo il sistema ugualmente distribuito e decentrato, grazie all'utilizzo della blockchain.
+
+I casi d'uso con cui verrà effettuato il testing riguarderanno un nodo Server del GRIDS System e un Client, ma sarà possibile utilizzare il sistema con una rete di Server e con Client multipli. (?)
+
+Poi vediamo se mi viene altro in mente...
+
+METTERE QUI IL FATTO DEL MECCANISMO DI RICARICA?
+
+% per l'immagine si fa una nuvoletta che rappresenta la siot, con dei cerchi che rappresentano i Server. i final client si connettono ai Server e le piattaforme 
 
 \section{Scelta della Blockchain}
 \label{c:integr:lib}
@@ -119,25 +138,30 @@ Come ho modificato i DB per integrare le trx
 
 - nuovo DB: social\_iot\_platform\_transaction e 4 tabelle
 
-Tabella "completed":
+La tabella "completed" contiene tutte le transazioni che sono state incluse nella Blockchain, insieme ai dati da restituire al Final Client. I campi sono i seguenti:
 
-- TrxHash
+\begin{itemsize}
+	\item \textbf{TrxHash}: hash della transazione confermata;
+	\item \textbf{content}: stringa con i dati.
+\end{itemsize}
 
-- content
+La tabella "unconfirmed" contiene tutte le transazioni non ancora confermate. I campi sono:
 
-Tabella "unconfirmed":
+\begin{itemsize}
+	\item \textbf{TrxHash}: hash della transazione da confermare;
+	\item \textbf{SVER\_ID} e \textbf{SVE\_ID} del nodo di cui sono stati richiesti i dati.
+\end{itemsize}
 
-- TrxHash
+La tabella "creditCharges" registra tutte le ricariche eseguite dagli utenti:
 
-- SVER\_ID e SVE\_ID
+\begin{itemsize}
+	\item \textbf{trxHash}: hash della transazione confermata;
+	\item \textbf{userID}: numero identificativo del Final Client. Al momento viene settato manualmente per ogni utente, ma successivamente potrebbe essere implementato un meccanismo di "log in" in cui sarà il GRIDS System a fornire dinamicamente un ID;
+	\item \textbf{credit}: valore del credito ricaricato (in satoshi);
+	\item \textbf{isConfirmed}: valore booleano che memorizza se la transazione è stata inclusa o meno nella Blockchain. Delle funzioni apposite del Transaction Client (paragrafo \ref{c:integr:trxmanager}) provvederanno a impostare il valore corretto di questo campo.
+\end{itemsize}
 
-Tabella "creditCharges":
-
-- trxHash 	userID 	credit 	isConfirmed 
-
-Tabella "readAPIkeys":
-
-- SVE\_ID   SVER\_ID   readAPIkey
+La tabella "readAPIkeys", infine, contiene, come dice il nome stesso, le readAPIkey di tutti i nodi ospitati dal GRIDS System. Essa verrà consultata 
 
 \section{RMI registry}
 \label{c:integr:rmi}
@@ -166,14 +190,12 @@ Cascata di codice e diagrammi!
 \section{Interfacce grafiche}
 \label{c:integr:gui}
 
-Tocco finale
+Aggiungere screenshot della GUI
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %\section{TO DO:}
 
 %- super schema COME LO FACCIO?
-
-%- diagramma classi FATTO 
 
 \section{Casi d'uso}
 \label{c:integr:useCase}
