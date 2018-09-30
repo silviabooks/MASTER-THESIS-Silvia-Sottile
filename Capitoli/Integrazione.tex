@@ -140,26 +140,26 @@ Come ho modificato i DB per integrare le trx
 
 La tabella "completed" contiene tutte le transazioni che sono state incluse nella Blockchain, insieme ai dati da restituire al Final Client. I campi sono i seguenti:
 
-\begin{itemsize}
-	\item \textbf{TrxHash}: hash della transazione confermata;
+\begin{itemize}
+    \item \textbf{TrxHash}: hash della transazione confermata;
 	\item \textbf{content}: stringa con i dati.
-\end{itemsize}
+\end{itemize}
 
 La tabella "unconfirmed" contiene tutte le transazioni non ancora confermate. I campi sono:
 
-\begin{itemsize}
-	\item \textbf{TrxHash}: hash della transazione da confermare;
-	\item \textbf{SVER\_ID} e \textbf{SVE\_ID} del nodo di cui sono stati richiesti i dati.
-\end{itemsize}
+\begin{itemize}
+    \item \textbf{TrxHash}: hash della transazione da confermare;
+    \item \textbf{SVER\_ID} e \textbf{SVE\_ID} del nodo di cui sono stati richiesti i dati.
+\end{itemize}
 
 La tabella "creditCharges" registra tutte le ricariche eseguite dagli utenti:
 
-\begin{itemsize}
-	\item \textbf{trxHash}: hash della transazione confermata;
+\begin{itemize}
+    \item \textbf{trxHash}: hash della transazione confermata;
 	\item \textbf{userID}: numero identificativo del Final Client. Al momento viene settato manualmente per ogni utente, ma successivamente potrebbe essere implementato un meccanismo di "log in" in cui sarà il GRIDS System a fornire dinamicamente un ID;
 	\item \textbf{credit}: valore del credito ricaricato (in satoshi);
 	\item \textbf{isConfirmed}: valore booleano che memorizza se la transazione è stata inclusa o meno nella Blockchain. Delle funzioni apposite del Transaction Client (paragrafo \ref{c:integr:trxmanager}) provvederanno a impostare il valore corretto di questo campo.
-\end{itemsize}
+\end{itemize}
 
 La tabella "readAPIkeys", infine, contiene, come dice il nome stesso, le readAPIkey di tutti i nodi ospitati dal GRIDS System. Essa verrà consultata 
 

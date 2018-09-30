@@ -21,6 +21,13 @@ Poi con 100 trx "veloci" (fatto)
 
 E poi vediamo i tre grafici: ritardo client-side delle trx standard, ritardo totale delle trx standard, ritardo totale delle transazioni veloci.
 
+Sui grafici: 
+
+il client side delay tende ad avere una distribuzione normale (il grafico, infatti, ricorda molto la \textit{normal function}). 
+
+le instant buy presentano ritardi molto contenuti, com'era auspicabile. Da notare il punto con ritardo più alto che corrisponde alla prima richiesta.
+
+l'end-to-end delay, infine, presenta valori temporali molto più ampi, visto che è compreso il tempo della conferma delle transazioni. La discontinuità che si osserva nel grafico è causata dal fatto che una parte delle transazioni sono state incluse in un blocco, mentre un'altra parte è stata confermata nel blocco successivo.
 
 %\begin{figure}[h!t]
 %\centerline{\includegraphics[scale=0.5]{img/GRIDSarch}}
