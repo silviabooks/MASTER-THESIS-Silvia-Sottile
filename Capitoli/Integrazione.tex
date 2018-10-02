@@ -108,11 +108,15 @@ Per acquisire bitcoin utili per operare nella testnet, si possono utilizzare del
 \section{Interfaccia Web e REST}
 \label{c:integr:webrest}
 
-È stata costruita un'interfaccia web con Angular 2 che interagisce con l'interfaccia REST\cite{FerreiraFilho2009} del sistema, per rendere più agevole l'interazione con il sistema.
+È stata costruita un'interfaccia web con Angular 2 che interagisce con l'interfaccia REST\cite{FerreiraFilho2009} del sistema, per rendere più agevole l'interazione con il sistema. In figura \ref{f:integr:gui-web} è rappresentata la GUI.
 
-%%%%%%%%%%%%%% screenshot con la web app
+\begin{figure}[h!t]
+\centerline{\includegraphics[scale=2.5]{img/gui-web-app}}
+\caption{Interfaccia grafica della web app}
+\label{f:integr:gui-web}
+\end{figure}
 
-Per quanto riguarda le REST API, è stata aggiunta nella risorsa REST "Server" (a fini di testing) una richiesta che effettua una transazione da parte del server SIoT verso il wallet del proprietario del nodo IoT per ottenere alcuni dati, per esempio l'elenco delle relazioni del nodo.
+Per quanto riguarda le REST API, invece, è stata aggiunta nella risorsa REST "Server" (a fini di testing) una richiesta che effettua una transazione da parte del server SIoT verso il wallet del proprietario del nodo IoT per ottenere alcuni dati, per esempio l'elenco delle relazioni del nodo.
 \begin{itemize}
     \item Metodo: GET
     \item Path: "{id}/SVER/{uid}/Transaction/{amount}/{address}"
