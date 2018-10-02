@@ -10,33 +10,20 @@ La metrica che è stata adoperata per la misura delle prestazioni della piattafo
 
 Una considerazione molto importante da fare è che, nel caso delle transazioni "lente", vi è una sorta di problema di "campionamento": visto che nella Testnet i blocchi vengono estratti ogni circa 20 minuti (che scende a 10 nel caso della rete Bitcoin ufficiale), il tempo di ritardo varierà in base a quanto tempo prima è stato risolto l'ultimo blocco della blockchain.
 
-La prima prova è stata effettuata con 100 transazioni  
-Ho provato con 100 transazioni standard e alcune di esse sono state respinte per "error 64: too-long-mempool-chain": non entravano più nel mempool perché ha una misura limitata! Vedere https://www.mycryptopedia.com/mempool-ex plained/ per la spiegazione.
+La prima prova è stata effettuata con 100 transazioni standard, però alcune di esse sono state respinte per "error 64: too-long-mempool-chain". Per spiegare efficacemente questo tipo di errore, è necessario introdurre il concetto di \textit{mempool}.
+Il Mempool (\textit{memory pool}) consiste nell'insieme di transazioni in attesa di approvazione da un miner. Ogni nodo della rete Bitcoin ha il proprio mempool, e quindi avrà una certa dimensione, rappresentata nell'ordine dei megabyte.
 
-The Mempool consists of pending transactions that have occurred over a cryptocurrency’s network and are therefore awaiting approval by a cryptocurrency miner. Each node on a cryptocurrency network operates their own Mempool, and thus will have their own unique size. The size of a node’s Mempool is typically represented as the unit of memory, megabyte (MB).
-As there are often thousands of transactions being held in the Mempool, it becomes unclear exactly which transaction miners should select to be included in the next block. Even though the goal is to have all transactions include on the blockchain, one method of getting your transaction included quicker, is to pay a higher fee. By paying a high fee on a transaction, the miner becomes incentivized to include your transaction in the next block rather than a transaction with a much lower fee. This is because miners receive fee payments on each transaction that they add to the blockchain, and therefore, miners will want to maximize the amount of money that they earn. 
-The Mempool is prone to fluctuations in size depending how many pending transactions are awaiting confirmation by a miner. Transaction backlog is known to be a frequent issue for a cryptocurrency experiencing large transactions volume across its network. Backlogs tend to occur because there is a limit on the number of transaction that can be included in a block, however, there is no limit on the number of transactions that can occur at any given time. The Mempool essentially becomes the bottle neck of network and it becomes very important that it is properly managed.
+Ciò vuol dire che, se viene generata una grande quantità di transazioni, il mempool può costituire un bottleneck se non gestito opportunamente: nel caso della rete Bitcoin, in questi casi alcune transazioni generate possono venire rifiutate, come effettivamente si è verificato durante il primo test.
 
-In Bitcoin Core\footnote{https://bitcoin.org/en/bitcoin-core/} il limite di transazioni non confermate che si possono generare di seguito è 25, quindi pazienza. Con bitcoinj non è stato implementato ancora un modo per aggirare questo limite, avrebbe addirittura poco senso, dato che il fatto che i nodi siano in modalità SPV va in antitesi con il fatto di poter generare un numero molto grande di transazioni.
+In Bitcoin Core\footnote{https://bitcoin.org/en/bitcoin-core/} il limite di transazioni che possono "sostare" nel mempool è di 25, anche se questo numero è generalmente soggetto a variazioni. Con bitcoinj non è stato implementato un modo per aggirare questo limite perchè, visto che i nodi sono in modalità SPV, e ciò va in antitesi con la capacità di generare un numero molto grande di transazioni.
 
-Però in ogni caso la piattaforma ha il meccanismo recharge, quindi il problema non si pone...
+In ogni caso la piattaforma possiede il meccanismo di recharge, quindi il problema viene aggirato in maniera semplice ed efficace.
 
-Un'altra importante precisazione da fare è che il mempool error si può verificare quando è un singolo wallet a generare troppe transazioni di seguito, non quando sono tanti wallet a generare meno transazioni: ciò significa che la rete SIoT non costituisce \textit{bottleneck}. In condizioni di utilizzo normale da parte di un utente qualsiasi, difficilmente saranno mandate così tante richieste...
+%%
+Un'altra importante precisazione da fare è che il mempool error si può verificare quando è un singolo wallet a generare troppe transazioni di seguito, non quando sono tanti wallet a generare meno transazioni: ciò significa che la rete SIoT non costituisce \textit{bottleneck}. In condizioni di utilizzo normale da parte di un utente qualsiasi, difficilmente saranno mandate così tante richieste
 %%
 
-Provare con 25 trx "lente"
-
-Poi con 100 trx "veloci" (fatto)
-
-E poi vediamo i tre grafici: ritardo client-side delle trx standard, ritardo totale delle trx standard, ritardo totale delle transazioni veloci.
-
-Sui grafici: 
-
-il client side delay tende ad avere una distribuzione normale (il grafico, infatti, ricorda molto la \textit{normal function}). 
-
-le instant buy presentano ritardi molto contenuti, com'era auspicabile. Da notare il punto con ritardo più alto che corrisponde alla prima richiesta.
-
-l'end-to-end delay, infine, presenta valori temporali molto più ampi, visto che è compreso il tempo della conferma delle transazioni. La discontinuità che si osserva nel grafico è causata dal fatto che una parte delle transazioni sono state incluse in un blocco, mentre un'altra parte è stata confermata nel blocco successivo. Quel gradino poi è di 5 minuti perchè ogni tanto nella testnet vengono creati i blocchi a 5 minuti di distanza anche se la media è di 20, è una cosa che succede raramente ma GUARDA CASO L'HO BECCATA durante il testing.
+La prima prova ha dato dei risultati per quato riguarda il delay end-to-end e quello client-side, dei quali sono rappresentate rispettivamente le CDF, ossia la distribuzione cumulativa di probabilità, nelle figure \ref{f:calcoli:end2end} e \ref{f:calcoli:client}. 
 
 \begin{figure}[h!t]
 \centerline{\includegraphics[width=\textwidth]{img/end-to-endGIUSTO}}
@@ -44,14 +31,22 @@ l'end-to-end delay, infine, presenta valori temporali molto più ampi, visto che
 \label{f:calcoli:end2end}
 \end{figure}
 
-\begin{figure}[h!t]
-\centerline{\includegraphics[width=\textwidth]{img/instant-buy-delay-grey}}
-\caption{CDF dei delay delle transazioni effettuate con credito}
-\label{f:calcoli:instant}
-\end{figure}
+Il client-side delay tende ad assumere una distribuzione normale: il grafico, infatti, ricorda molto quello di una \textit{normal function}. 
+L'end-to-end delay, invece, presenta valori temporali molto più ampi, visto che è compreso il tempo della conferma delle transazioni. La discontinuità che si osserva nel grafico è causata dal fatto che una parte delle transazioni sono state incluse in un blocco, mentre un'altra parte è stata confermata nel blocco successivo. Da notare, inoltre, che il gradino presenta una durata di 5 minuti anzichè di 20 come ci si aspetterebbe dal tempo medio di creazione dei blocchi.
+
+
 
 \begin{figure}[h!t]
 \centerline{\includegraphics[width=\textwidth]{img/client-side-delay-grey}}
 \caption{CDF dei delay client-side delle transazioni}
 \label{f:calcoli:client}
 \end{figure}
+
+Le instant buy, infatti, presentano ritardi molto contenuti, com'era auspicabile. Da notare che il punto con ritardo più alto corrisponde alla prima richiesta.
+
+\begin{figure}[h!t]
+\centerline{\includegraphics[width=\textwidth]{img/instant-buy-delay-grey}}
+\caption{CDF dei delay delle transazioni effettuate con credito}
+\label{f:calcoli:instant}
+\end{figure}
+

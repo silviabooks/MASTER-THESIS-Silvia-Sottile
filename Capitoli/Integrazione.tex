@@ -1,9 +1,9 @@
 \section{Modello teorico}
 \label{c:integr:model}
 
-TO DO immagine del modello
-
 Prima di cominciare lo sviluppo, è di vitale importanza pensare al modello di integrazione della blockchain nel sistema, rappresentato in figura \ref{f:integr:modello}. 
+
+%% METTERE IMMAGINE DEL MODELLO FINALE
 
 Verrà creata un'applicazione che sarà utilizzata dall'utente finale per comprare i dati dei nodi della rete. 
 Ognuna di esse è in grado di effettuare le transazioni, che saranno poi incluse nella blockchain. Ogni utente, attraverso l'applicazione, si connette con un nodo Server del GRIDS System. Quest'ultimo è incaricato di prendere i dati delle SVE che ospita (il Server stesso o gli altri Server della rete SIoT), attraverso i meccanismi di discovery descritti nel capitolo \ref{c:grids}, e di restituire i risultati all'utente finale. 
@@ -16,9 +16,8 @@ In sostanza, non vengono acquistati i dati direttamente dal sensore, ma viene ag
 
 I casi d'uso con cui verrà effettuato il testing riguarderanno un nodo Server del GRIDS System e un Client, ma sarà possibile utilizzare il sistema con una rete di Server e con Client multipli.
 
-Poi vediamo se mi viene altro in mente...
+Sarà sviluppato, inoltre, un meccanismo di "ricarica" che permetterà al sistema di aggirare i tempi di conferma delle transazioni, che come sappiamo sono una caratteristica imprescindibile di qualsiasi blockchain, con il quale i client potranno effettuare un'unica transazione più grande e successivamente attingere dal credito residuo ogni qual volta desiderano acquisire dati dal sistema.
 
-METTERE QUI IL FATTO DEL MECCANISMO DI RICARICA?
 
 % per l'immagine si fa una nuvoletta che rappresenta la siot, con dei cerchi che rappresentano i Server. i final client si connettono ai Server e le piattaforme 
 
@@ -44,9 +43,9 @@ Bitcoinj è una libreria per lavorare con il protocollo Bitcoin. Può mantenere 
 
 Una caratteristica peculiare di Bitcoinj è la presenza della \textit{Simplified Payment Verification} (SPV): in questa modalità viene scaricata solo una piccola parte della blockchain, quindi è possibile utilizzare la libreria in dispositivi constrained, come i nodi dell'IoT. 
 
-Altre caratteristiche di Bitcoinj sono: % rivedere?
+Altre caratteristiche di Bitcoinj sono: 
 \begin{itemize}
-    \item una \textit{wallet class} con cifratura, calcolo delle fees, derivazione deterministica della chiave e event listener che permettono di tenere aggiornato il saldo del wallet;
+    \item una \textit{wallet class} con cifratura, calcolo delle \textit{fees} (commissioni), derivazione deterministica della chiave e event listener che permettono di tenere aggiornato il saldo del wallet;
     \item un'applicazione con GUI per il wallet da utilizzare come base per le proprie app;
     \item \textit{full verification mode} sperimentale, che svolge lo stesso processo di verifica di Bitcoin Core. In questa modalità, il set di \textit{unspent transaction output} (UTXO set) viene calcolato e indicizzato in un database, permettendo un lookup veloce del saldo del wallet;
 \end{itemize}
@@ -68,8 +67,9 @@ Per spiegare meglio il funzionamento di questi attacchi, bisogna prima introdurr
 Una \textit{pending transaction} è una transazione non ancora inclusa nella blockchain; in altre parole, è lo stato che assume non appena viene diffusa nella rete. I nodi miners che vedono questa transazione, ne controllano la validità e, se il risultato è positivo, la includono nel blocco che al momento stanno provando a risolvere. Naturalmente, quelle non valide vengono ignorate.
 
 L'applicazione del client riceverà le \textit{pending transactions}, le aggiungerà al wallet e avvierà gli event listener. Tuttavia, nella modalità SPV l'unico motivo che si ha per credere che la transazione sia valida è il fatto che i nodi a cui si è connessi trasmettano la transazione nella rete. Se un'applicazione fosse connessa a un nodo malevolo, quest'ultimo potrebbe passare all'applicazione delle transazioni completamente invalide (come \textit{double spend} o addirittura transazioni con soldi inesistenti), e verrebbero ugualmente prese per buone. 
-Dato che le applicazioni sviluppate con Bitcoinj non accettano connessioni in entrata, i peer con cui esse comunicano sono sempre scelti in maniera casuale all'avvio, quindi diventa estremamente difficile per un aggressore controllarne la connettività. Per questa ragione, il numero di peer che hanno confermato una transazione viene esposto attraverso l'oggetto \textit{TransactionConfidence}, e l'applicazione è in grado di monitorarlo per avere questo tipo di informazione. 
-%%% questo strumentopolo misterioso ci servirà dopo....
+
+Dato che le applicazioni sviluppate con Bitcoinj non accettano connessioni in entrata, i peer con cui esse comunicano sono sempre scelti in maniera casuale all'avvio, quindi diventa estremamente difficile per un aggressore controllarne la connettività. Per questa ragione, il numero di peer che hanno confermato una transazione viene esposto attraverso l'oggetto \textit{TransactionConfidence}, e l'applicazione è in grado di monitorarlo per avere questo tipo di informazione. Questa feature, come verrà spiegato più avanti, sarà molto utile per lo sviluppo dei wallet del GRIDS System.
+
 Una volta che la maggior parte dei peer hanno confermato quella transazione, si può essere abbastanza sicuri che essa si sta propagando attraverso la rete e con ogni probabilità è valida: ecco il motivo principale per cui il Sybil attack è molto improbabile.
 
 In un Finney attack, invece, l'attaccante crea un blocco che include una transazione tra due indirizzi controllati da lui. Una volta estratto il blocco, non lo diffonde subito, ma invece va a spendere quella valuta da qualche venditore che accetta transazioni non confermate. Una volta ottenuti i beni dal venditore, diffonde il blocco contenente il double spend, e quindi riceve i soldi indietro. Tutto questo processo richiede una buona dose di tempismo e pazienza da parte dell'attaccante: non solo deve risolvere correttamente il blocco, ma deve anche effettuare velocemente l'acquisto del bene, prima che un altro miner riesca a risolvere e a diffondere un altro blocco valido. In conclusione, un utente che vende beni in maniera irreversibile, in maniera veloce e che accetta transazioni non confermate è suscettibile a un attacco Finney.
@@ -108,7 +108,10 @@ Per acquisire bitcoin utili per operare nella testnet, si possono utilizzare del
 \section{Interfaccia Web e REST}
 \label{c:integr:webrest}
 
-È stata costruita un'interfaccia web con Angular 2 che interagisce con l'interfaccia REST del sistema, per rendere più agevole l'interazione con il sistema.
+È stata costruita un'interfaccia web con Angular 2 che interagisce con l'interfaccia REST\cite{FerreiraFilho2009} del sistema, per rendere più agevole l'interazione con il sistema.
+
+%%%%%%%%%%%%%% screenshot con la web app
+
 Per quanto riguarda le REST API, è stata aggiunta nella risorsa REST "Server" (a fini di testing) una richiesta che effettua una transazione da parte del server SIoT verso il wallet del proprietario del nodo IoT per ottenere alcuni dati, per esempio l'elenco delle relazioni del nodo.
 \begin{itemize}
     \item Metodo: GET
@@ -117,7 +120,7 @@ Per quanto riguarda le REST API, è stata aggiunta nella risorsa REST "Server" (
 
 I parametri \textit{id} e \textit{uid} sono analoghi a quelli citati nel paragrafo \ref{c:grids:implementation}, mentre \textit{amount} e \textit{address} sono rispettivamente il numero di satoshi da inviare e l'indirizzo del wallet di destinazione.
 
-È stata inoltre aggiunta la risorsa REST aggiuntiva "Transaction", che raccoglie le richieste per l'interazione con il Transaction Manager. È stata definita una richiesta che permette di visualizzare i dati ottenuti a seguito di una transazione.
+È stata inoltre aggiunta la risorsa REST aggiuntiva "Transaction", di cui è riportato un estratto nel listing \ref{restResource}, che raccoglie le richieste per l'interazione con il Transaction Manager. È stata definita una richiesta che permette di visualizzare i dati ottenuti a seguito di una transazione.
 \begin{itemize}
     \item Metodo: GET
     \item Path: "{trxHash}", dove trxHash è l'hash della transazione di cui si vuole visualizzare il risultato.
@@ -126,17 +129,30 @@ I parametri \textit{id} e \textit{uid} sono analoghi a quelli citati nel paragra
 Nel caso d'uso considerato per lo sviluppo del sistema, con questa richiesta verrà restituita la \textit{Thingspeak readAPIkey} corrispondente al nodo di cui si desiderano i dati.
 
 
-\subsection{Che cos'è REST (?)}
-\label{c:integr:webrest:boh}
+\begin{lstlisting}[caption={TransactionResource.java},label={restResource},style={c}]
 
-\cite{FerreiraFilho2009}
+@GET
+@Path("{trxHash}")
+@Produces(MediaType.TEXT_PLAIN)
+public String visualizeData(@PathParam("trxHash") String trxHash) {
+    // search the trx in the DB
+    trxManager = new TrxManager();
+    String result;
+    if (trxManager.isUnconfirmed(trxHash)) {
+        result = "Waiting for transaction validation...";
+    } else {
+        // get the data of transaction
+        result = trxManager.getCompletedTrx(trxHash);
+    }
+    trxManager.closeConnection();
+    return result;
+}
+\end{lstlisting}
 
 \section{Database}
 \label{c:integr:db}
 
-Come ho modificato i DB per integrare le trx
-
-- nuovo DB: social\_iot\_platform\_transaction e 4 tabelle
+Per quanto riguarda la parte di Data Access, è stato creato un nuovo database, oltre ai due preesistenti, chiamato \textit{social\_iot\_platform\_transaction}, in cui sono contenute quattro tabelle necessarie per l'implementazione delle transazioni.
 
 La tabella "completed" contiene tutte le transazioni che sono state incluse nella Blockchain, insieme ai dati da restituire al Final Client. I campi sono i seguenti:
 
@@ -166,14 +182,41 @@ La tabella "readAPIkeys", infine, contiene, come dice il nome stesso, le readAPI
 \section{RMI registry}
 \label{c:integr:rmi}
 
-Elenco dei metodi aggiunti nella Root RMI già esistente
+La Java API che permette di eseguire la \textit{remote method invocation} è l'elemento fondamentale della comunicazione tra le entità del sistema. Oltre all'interfaccia già esistente per l'interazione tra i Server del GRIDS System, è stata creata un'ulteriore interfaccia RMI per la comunicazione tra Server e Final Client: quest'ultima, però, è stata separata dalla prima per garantire il disaccoppiamento tra i metodi invocabili dai Server per la creazione dei propri wallet e i metodi per la richiesta di dati da parte dei Final Client. Perciò è presente un processo aggiuntivo in ascolto sulla porta 4849, diverso dal processo rmiregistry in ascolto sulla porta di default 1099, nella quale verrà effettuato il binding dei metodi della FinalClientRMIRootInterface, illustrata più avanti.
 
-- CreateWallet()
-- getTransactionClient()
-- getWalletBalance()
-- makeTransaction(String destAddress, String amount)
+I metodi che sono stati aggiunti all'interfaccia RMI già esistente sono i seguenti:
 
-Elenco dei metodi del FinalClient (tutti)
+\begin{itemize}
+    \item CreateWallet(): permette la creazione del wallet destinato al nodo Server;
+    \item getWalletBalance(): restituisce la quantità di valuta presente all'interno del wallet;
+    \item makeTransaction(String destAddress, String amount): permette di effettuare una transazione di una quantità \textit{amount} di bitcoin all'indirizzo \textit{destAddress}.
+\end{itemize}
+
+I metodi dell'interfaccia FinalClientRMIRoot, riportati nel listing \ref{FinalClientRMIRootInterface}, vengono implementati all'interno del Server, e sono accessibili dai Final Client. Essi sono:
+
+\begin{itemize}
+    \item requestDataWithTrx
+    \item rechargeCredit
+    \item getCredit
+    \item requestDatawithCredit
+\end{itemize}
+
+\begin{lstlisting}[caption={FinalClientRMIRootInterface.java},label={FinalClientRMIRootInterface},style={c}]
+
+public interface FinalClientRMIRootInterface extends Remote {
+    
+    public String requestDataWithTrx(String txHash, String SVER_ID, String SVE_ID) throws RemoteException;
+    
+    public String rechargeCredit(String trxHash, int userID, int amount) throws RemoteException;
+    
+    public int getCredit(int userID) throws RemoteException;
+    
+    public String requestDatawithCredit(String SVER_ID, String SVE_ID, int userID) throws RemoteException;
+}
+
+\end{lstlisting}
+
+Nell'implementazione dei metodi appena elencati vengono istanziati oggetti di una classe chiamata \textit{Transaction Manager}, il punto focale del meccanismo di esecuzione e verifica delle transazioni, ma anche dell'accesso ai dati. Nel paragrafo \ref{c:integr:trxmanager} sarà illustrato nel dettaglio.
 
 \section{Transaction Manager}
 \label{c:integr:trxmanager}
@@ -192,10 +235,6 @@ Cascata di codice e diagrammi!
 
 Aggiungere screenshot della GUI
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\section{TO DO:}
-
-%- super schema COME LO FACCIO?
 
 \section{Casi d'uso}
 \label{c:integr:useCase}
@@ -206,6 +245,5 @@ Mettere l'acquisto lento, la ricarica, e l'acquisto veloce
 ALTRO:
 
 - dire del problema che bisogna aspettare la conferma delle trx di volta in volta, quindi si è pensato di velocizzare l'acquisto dei dati con metodo "a ricarica".
-%- pippotto sulla chiave
 
 - mettere il sito https://testnet.blockchain.info/ in cui è possibile vedere tutti i blocchi della blockchain in tempo reale
