@@ -4,6 +4,7 @@
 Prima di cominciare lo sviluppo, è di vitale importanza pensare al modello di integrazione della blockchain nel sistema, rappresentato in figura \ref{f:integr:modello}. 
 
 %% METTERE IMMAGINE DEL MODELLO FINALE
+% per l'immagine si fa una nuvoletta che rappresenta la siot, con dei cerchi che rappresentano i Server. i final client si connettono ai Server e le piattaforme 
 
 Verrà creata un'applicazione che sarà utilizzata dall'utente finale per comprare i dati dei nodi della rete. 
 Ognuna di esse è in grado di effettuare le transazioni, che saranno poi incluse nella blockchain. Ogni utente, attraverso l'applicazione, si connette con un nodo Server del GRIDS System. Quest'ultimo è incaricato di prendere i dati delle SVE che ospita (il Server stesso o gli altri Server della rete SIoT), attraverso i meccanismi di discovery descritti nel capitolo \ref{c:grids}, e di restituire i risultati all'utente finale. 
@@ -18,9 +19,6 @@ I casi d'uso con cui verrà effettuato il testing riguarderanno un nodo Server d
 
 Sarà sviluppato, inoltre, un meccanismo di "ricarica" che permetterà al sistema di aggirare i tempi di conferma delle transazioni, che come sappiamo sono una caratteristica imprescindibile di qualsiasi blockchain, con il quale i client potranno effettuare un'unica transazione più grande e successivamente attingere dal credito residuo ogni qual volta desiderano acquisire dati dal sistema.
 
-
-% per l'immagine si fa una nuvoletta che rappresenta la siot, con dei cerchi che rappresentano i Server. i final client si connettono ai Server e le piattaforme 
-
 \section{Scelta della Blockchain}
 \label{c:integr:lib}
 
@@ -32,7 +30,7 @@ La prima cosa da considerare per lo sviluppo del sistema è in modo in cui la bl
 
 L'implementazione \textit{from scratch} è una scelta poco pratica poiché è molto difficile reperire le risorse necessarie per il deployment di una blockchain, come ad esempio un numero considerevole di calcolatori per formare la rete di miners, e potenza computazionale sufficiente per l'esecuzione di un algoritmo per il raggiungimento del consenso.
 
-Quindi la scelta naturale è l'uso di una blockchain preesistente attraverso reference implementation o librerie. Nello specifico, è stata scelta la rete Bitcoin, con una community molto estesa di developer e un set di tool per potervi interagire, tra cui Bitcoinj\footnote{https://bitcoinj.github.io/}, una libreria implementata in Java, stesso linguaggio di programmazione utilizzato per lo sviluppo del GRIDS System. Le caratteristiche di questa libreria sono illustrate nel paragrafo \ref{c:integr:lib:bitcoinj}.
+Quindi la scelta naturale è l'uso di una blockchain preesistente attraverso \textit{reference implementation} o librerie. Nello specifico, è stata scelta la rete Bitcoin, con una community molto estesa di developer e un set di tool per potervi interagire, tra cui Bitcoinj\footnote{https://bitcoinj.github.io/}, una libreria implementata in Java, stesso linguaggio di programmazione utilizzato per lo sviluppo del GRIDS System. Le caratteristiche di questa libreria sono illustrate nel paragrafo \ref{c:integr:lib:bitcoinj}.
 Un'altra feature della rete Bitcoin che ha influito positivamente sulla scelta della blockchain è la presenza di una Testnet, cioè una rete separata da Bitcoin Core in cui le transazioni non hanno alcun valore monetario. Essa è approfondita nel paragrafo \ref{c:integr:lib:testnet}.
 
 
@@ -108,7 +106,7 @@ Per acquisire bitcoin utili per operare nella testnet, si possono utilizzare del
 \section{Interfaccia Web e REST}
 \label{c:integr:webrest}
 
-È stata costruita un'interfaccia web con Angular 2 che interagisce con l'interfaccia REST\cite{FerreiraFilho2009} del sistema, per rendere più agevole l'interazione con il sistema. In figura \ref{f:integr:gui-web} è rappresentata la GUI.
+È stata costruita un'interfaccia web con Angular 2 che interagisce con l'interfaccia REST del sistema, per rendere più agevole l'interazione con il sistema. In figura \ref{f:integr:gui-web} è rappresentata la GUI.
 
 \begin{figure}[h!t]
 \centerline{\includegraphics[scale=2.5]{img/gui-web-app}}

@@ -1,18 +1,22 @@
-In questo lavoro di tesi è stato presentato un sistema che realizza il mapping... ed è stato integrato con la blockchain....
+In questo lavoro di tesi è stato presentato il \textit{GRIDS System}, un sistema già esistente che realizza le operazioni di mapping \textit{ID-to-locator}, nelle quali viene disaccoppiato l'host identifier (ID) dal suo locator, cioè l'indirizzo di rete.
 
-dopo una valutazione sulle tecnologie utilizzabili per l'integrazione della blockchain nel sistema, si è passati all'implementazione, grazie alla libreria Bitcoinj per sviluppare client completi di wallet e funzioni per effettuare le transazioni....
+Esso permette di unificare l'accesso a piattaforme di virtualizzazione dei nodi IoT differenti, come Thingspeak e FESTIVAL.
 
-Il sistema completo di blockchain è risultato essere ...
+Nella seconda parte della tesi è stata presentata un'estensione di tale sistema che integra una blockchain, per permettere agli utenti di acquistare i dati dei nodi IoT esposti attraverso il GRIDS System.
 
-soprattutto con il meccanismo di ricarica si è riusciti a bypassare i tempi di conferma delle transazioni....
+Al fine di implementare tale architettura si è prima valutato le diverse tecnologie per l'integrazione della blockchain nel sistema, e si è scelta la rete Bitcoin, in quanto possiede un set di strumenti di sviluppo, tra cui Bitcoinj, utile per sviluppare client completi di wallet e funzioni per effettuare le transazioni attraverso la rete.
 
-cose fighe...
+Il sistema, completo di blockchain, ha soddisfatto le aspettative: è possibile effettuare l'acquisto dei dati dei nodi IoT, navigabili attraverso la rete SIoT, a fronte della conferma della transazione di bitcoin. 
+
+Inoltre, per aggirare i tempi di conferma delle transazioni, è stato implementato un meccanismo di ricarica. L'utente finale può effettuare un'unica transazione al Server e, una volta confermata, può acquistare tutti i dati di cui ha bisogno utilizzando il credito residuo. 
+
+Questo metodo è risultato essere molto efficace per accorciare i tempi di risposta del 99\%.
 
 
 Qui di seguito sono proposti dei possibili sviluppi futuri per il sistema: 
 \begin{itemize}
-    \item deployare il sistema nella rete Bitcoin ufficiale: questo implica l'acquisto di criptovaluta oppure il mining di bitcoin con macchine sufficientemente potenti per supportare l'algoritmo di Proof of Work, C'È DA UNIRSI A UN POOL DI MINER, OVVIAMENTE NON POSSIAMO ESSERE MINER DA SOLI, NO SE PUEDE;
-    \item realizzare una blockchain from scratch, PERÒ CI VOGLIONO TANTE RISORSE;
-    \item usare altre blockchain (Ethereum, Ripple);
-    \item aggiungere gli Smart Contracts\footnote{https://en.bitcoin.it/wiki/Contract}, cioè INSERIRE DESCRIZIONE SUGLI SMART CONTRACTS PIÙ PAPER, per automatizzare i meccanismi di retrieval dei dati.
+    \item effettuare il deployment del sistema nella rete Bitcoin ufficiale: questo implica l'acquisto di criptovaluta oppure il mining di bitcoin. Ciò potrebbe essere realizzabile non attraverso un full node indipendente (che richiederebbe macchine sufficientemente potenti per risolvere i blocchi in tempi ragionevoli), ma unendosi a un pool di miner, che consentono di effettuare il mining di blocchi anche con macchine dalle prestazioni standard;
+    \item realizzare una blockchain \textit{from scratch}, anche se è necessaria una quantità di risorse computazionali tale da rendere possibile la realizzazione di una rete di \textit{miners};
+    \item utilizzare altre blockchain, come ad esempio \textit{Ethereum}, \textit{Ripple} o \textit{Blockchain as a Service} di IBM;
+    \item aggiungere al sistema gli Smart Contracts\footnote{https://en.bitcoin.it/wiki/Contract} per automatizzare i meccanismi di retrieval dei dati. Essi sono un metodo diverso di utilizzare la rete Bitcoin per stipulare accordi con persone attraverso la blockchain, permettendo di risolvere problemi comuni con un livello minimo di \textit{trust} e quindi di automatizzarne le risoluzioni senza l'intervento del giudizio umano. 
 \end{itemize}

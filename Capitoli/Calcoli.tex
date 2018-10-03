@@ -32,9 +32,7 @@ La prima prova ha dato dei risultati per quato riguarda il delay end-to-end e qu
 \end{figure}
 
 Il client-side delay tende ad assumere una distribuzione normale: il grafico, infatti, ricorda molto quello di una \textit{normal function}. 
-L'end-to-end delay, invece, presenta valori temporali molto più ampi, visto che è compreso il tempo della conferma delle transazioni. La discontinuità che si osserva nel grafico è causata dal fatto che una parte delle transazioni sono state incluse in un blocco, mentre un'altra parte è stata confermata nel blocco successivo. Da notare, inoltre, che il gradino presenta una durata di 5 minuti anzichè di 20 come ci si aspetterebbe dal tempo medio di creazione dei blocchi.
-
-
+L'end-to-end delay, invece, presenta valori temporali molto più ampi, visto che è compreso il tempo della conferma delle transazioni. La discontinuità che si osserva nel grafico è causata dal fatto che una parte delle transazioni sono state incluse in un blocco, mentre un'altra parte è stata confermata nel blocco successivo. Da notare, inoltre, che il gradino presenta una durata di 5 minuti anzichè di 20, come ci si aspetterebbe dal tempo medio di creazione dei blocchi.
 
 \begin{figure}[h!t]
 \centerline{\includegraphics[width=\textwidth]{img/client-side-delay-grey}}
@@ -43,6 +41,8 @@ L'end-to-end delay, invece, presenta valori temporali molto più ampi, visto che
 \end{figure}
 
 Le instant buy, infatti, presentano ritardi molto contenuti, com'era auspicabile. Da notare che il punto con ritardo più alto corrisponde alla prima richiesta.
+
+Infine, confrontando i valori temporali delle transazioni standard e delle instant buy, si può osservare un considerevole aumento delle performance, nello specifico del 99\%.
 
 \begin{figure}[h!t]
 \centerline{\includegraphics[width=\textwidth]{img/instant-buy-delay-grey}}
