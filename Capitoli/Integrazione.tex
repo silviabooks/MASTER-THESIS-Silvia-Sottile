@@ -224,32 +224,33 @@ Nell'implementazione dei metodi appena elencati vengono istanziati oggetti di un
 \label{c:integr:trxmanager}
 
 
-Il wallet Bitcoin, prima di essere integrato all'interno del GRIDS System, è stato sviluppato seraratamente come mostrato nel diagramma \ref{f:integr:trxclient}. L'interfaccia \textit{TransactionIf} contiene le signature delle funzioni basilari per il funzionamento del wallet, come ad esempio makeTransaction() e getWallet(). La classe \textit{TransactionClient} contiene le implementazioni di tali metodi e gli attributi kit e params.....
+Il wallet Bitcoin, prima di essere integrato all'interno del GRIDS System, è stato sviluppato separatamente, come mostrato nel diagramma \ref{f:integr:trxclient}, ??per esigenze di testing??. L'interfaccia \textit{TransactionIf} contiene le \textit{signature} delle funzioni basilari per il funzionamento del wallet, come ad esempio makeTransaction(). La classe \textit{TransactionClient} contiene le implementazioni di tali metodi e gli attributi kit e params, rispettivamente delle classi \textit{WalletAppKit} e \textit{NetworkParameters} della libreria Bitcoinj. Nel listing \ref{trxClient} viene riportata l'implementazione del metodo makeTransaction(). Nel corpo del codice si può osservare l'istanziazione di una SendRequest che specifica, oltre all'oggetto Address contenente l'indirizzo del wallet destinatario, la quantità di valuta da scambiare. Viene poi aggiunta una commissione (in questo caso è la \textit{minimum fee} di riferimento della rete Bitcoin) e, cosa più importante, viene verificato che il risultato della richiesta non sia nullo, per evitare di generare una transazione che spendi più soldi di quanti non ne abbia il wallet del mittente. CheckNotNull() è una funzione di \textit{Guava} (Google core libraries for Java).
 
 %listing trx client
 \begin{lstlisting}[caption={Metodo makeTransaction in TransactionClient.java},label={trxClient},style={c}]
 
-public Transaction makeTransaction(String destAddress, String amount) {
-    Transaction transaction = null;
-    System.out.println("Sending " + amount + " satoshis to " + destAddress);
-    Address address = Address.fromBase58(this.params, destAddress);
-    try {
-        SendRequest sendRequest = SendRequest.to(address,
-                Coin.valueOf(Long.parseLong(amount)));
-        sendRequest.feePerKb = Transaction.REFERENCE_DEFAULT_MIN_TX_FEE;
-        Wallet.SendResult sendResult = this.getWallet().sendCoins(
-                this.getKit().peerGroup(), sendRequest);
-        checkNotNull(sendResult); 
-        transaction = sendResult.broadcastComplete.get();
-        System.out.println("coins sent. transaction hash: "
-                + transaction.getHashAsString());
-    } catch (InsufficientMoneyException e) {
-        System.out.println("Not enough coins in your wallet. Missing "
-                + e.missing.getValue() + " satoshis are missing (including fees)");
-    } catch (InterruptedException | ExecutionException ex) {
-        Logger.getLogger(TransactionClient.class.getName()).log(Level.SEVERE, null, ex);
-    }
-    return transaction;
+public Transaction makeTransaction(String destAddress, String amount) 
+{
+Transaction transaction = null;
+System.out.println("Sending " + amount + " satoshis to " + destAddress);
+Address address = Address.fromBase58(this.params, destAddress);
+try {
+    SendRequest sendRequest = SendRequest.to(address,
+            Coin.valueOf(Long.parseLong(amount)));
+    sendRequest.feePerKb = Transaction.REFERENCE_DEFAULT_MIN_TX_FEE;
+    Wallet.SendResult sendResult = this.getWallet().sendCoins(
+            this.getKit().peerGroup(), sendRequest);
+    checkNotNull(sendResult); 
+    transaction = sendResult.broadcastComplete.get();
+    System.out.println("coins sent. transaction hash: "
+            + transaction.getHashAsString());
+} catch (InsufficientMoneyException e) {
+    System.out.println("Not enough coins in your wallet. Missing "
+            + e.missing.getValue() + " satoshis are missing (including fees)");
+} catch (InterruptedException | ExecutionException ex) {
+    Logger.getLogger(TransactionClient.class.getName()).log(Level.SEVERE, null, ex);
+}
+return transaction;
 
 }
 \end{lstlisting}
@@ -261,7 +262,7 @@ public Transaction makeTransaction(String destAddress, String amount) {
 \end{figure}
 
 Il \textit{Transaction Manager} è lo strato software in cui vengono implementate tutte le funzioni di gestione del meccanismo di ricezione dei soldi e restituzione dei dati. 
-% parlare prima del trx client e la sua interfaccia e gui
+
 Il Transaction Manager che si trova all'interno del nodo Server del GRIDS System è composto dalle seguenti classi Java:
 
 \begin{itemize}
@@ -273,10 +274,7 @@ Il Transaction Manager che si trova all'interno del nodo Server del GRIDS System
 
 Cascata di codice e diagrammi!
 
-
-
-
-\section{Interfacce grafiche}
+\section{Interfacce grafiche ???????}
 \label{c:integr:gui}
 
 Aggiungere screenshot della GUI
