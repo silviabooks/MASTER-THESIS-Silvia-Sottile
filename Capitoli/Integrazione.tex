@@ -220,12 +220,21 @@ public interface FinalClientRMIRootInterface extends Remote {
 
 Nell'implementazione dei metodi appena elencati vengono istanziati oggetti di una classe chiamata \textit{Transaction Manager}, il punto focale del meccanismo di esecuzione e verifica delle transazioni, ma anche dell'accesso ai dati. Nel paragrafo \ref{c:integr:trxmanager} sarà illustrato nel dettaglio.
 
+I metodi dell'interfaccia RMI, come già detto, sono accessibili al Final Client: come si può vedere in figura \ref{f:integr:final-client-diagram}, è presente la stessa \textit{FinalClientRMIRootInterface} contenuta nel Server. Essa viene acceduta tramite l'attributo \textit{lookUp}. Le altre classi verranno illustrate più avanti nel paragrafo \ref{c:integr:wallet}.
+
+\begin{figure}[h!t]
+\centerline{\includegraphics[width=\textwidth]{img/finalClientCorrect}}
+\caption{Diagramma delle classi del Final Client}
+\label{f:integr:final-client-diagram}
+\end{figure}
+
+
 \section{Wallet Bitcoin}
 \label{c:integr:wallet}
 
 Il wallet Bitcoin, prima di essere integrato all'interno del GRIDS System, è stato sviluppato separatamente, come mostrato nel diagramma \ref{f:integr:trxclient}, ??per esigenze di testing??. L'interfaccia \textit{TransactionIf} contiene le \textit{signature} delle funzioni basilari per il funzionamento del wallet, come ad esempio makeTransaction(). 
 
-La classe \textit{TransactionClient} contiene le implementazioni di tali metodi e gli attributi \textit{kit} e \textit{params}, rispettivamente delle classi \textit{WalletAppKit} e \textit{NetworkParameters} della libreria Bitcoinj. Nel listing \ref{trxClient} viene riportata l'implementazione del metodo makeTransaction(). Nel corpo del codice si può osservare l'istanziazione di una SendRequest che specifica, oltre all'oggetto Address contenente l'indirizzo del wallet destinatario, la quantità di valuta da scambiare. Viene poi aggiunta una commissione (in questo caso è la \textit{minimum fee} di riferimento della rete Bitcoin) e, cosa più importante, viene verificato che il risultato della richiesta non sia nullo, per evitare di generare una transazione che spendi più soldi di quanti non ne abbia il wallet del mittente. Per fare ciò viene utilizzata la funzione checkNotNull() della libreria \textit{Guava} (Google core libraries for Java).
+La classe \textit{TransactionClient} contiene le implementazioni di tali metodi e gli attributi \textit{kit} e \textit{params}, rispettivamente delle classi \textit{WalletAppKit} e \textit{NetworkParameters} della libreria Bitcoinj. Nel listing \ref{trxClient} viene riportata l'implementazione del metodo makeTransaction(). Nel corpo del codice si può osservare l'istanziazione di una SendRequest che specifica, oltre all'oggetto Address contenente l'indirizzo del wallet destinatario, la quantità di valuta da scambiare. Viene poi aggiunta una commissione (in questo caso è la \textit{minimum fee} di riferimento della rete Bitcoin) e, cosa più importante, viene verificato che il risultato della richiesta non sia nullo. Questo per evitare di generare una transazione che spendi più soldi di quanti non ne abbia il wallet del mittente. Per fare ciò viene utilizzata la funzione checkNotNull() della libreria \textit{Guava}\footnote{https://github.com/google/guava} (Google core libraries for Java).
 
 %listing trx client
 \begin{lstlisting}[caption={Metodo makeTransaction in TransactionClient.java},label={trxClient},style={c}]
@@ -256,9 +265,7 @@ return transaction;
 }
 \end{lstlisting}
 
-% Parlare del wallet fisico, che viene creato in automatico da Bitcoinj ed è composto da due file che vengono conservati nella macchina su cui gira il wallet. 
-% .spvchain: contains a chain of all the BitCoin currency transactions specific to your .WALLET file; created when the WALLET file is created and updated automatically after each transaction.
-% .wallet: A WALLET file is a file created by Multibit, an international Bitcoin wallet used to perform Bitcoin transactions. It contains private keys and transactions referenced in the transactions of the BitCoin currency.
+Il wallet Bitcoin viene conservato in memoria attraverso due file, aventi i formati .spvchain e .wallet. Il primo contiene una catena di tutte le transazioni di bitcoin relative al wallet corrente, e viene aggiornato automaticamente dopo ogni transazione; il secondo, invece, contiene le chiavi private per l'accesso al wallet stesso.
 
 \begin{figure}[h!t]
 \centerline{\includegraphics[scale=2]{img/BlockchainCorrect}}
@@ -285,13 +292,29 @@ Il \textit{Transaction Manager} è lo strato software in cui vengono implementat
 Il Transaction Manager che si trova all'interno del nodo Server del GRIDS System è composto dalle seguenti classi Java:
 
 \begin{itemize}
-    \item TrxManager:
-    \item SIoTBitcoinClient:
-    \item WalletWrapper:
-    \item TransactionResource:
+    \item TrxManager: contiene tutti i metodi per l'accesso al database
+    \item SIoTBitcoinClient: è il TrxClient, viene incapsulato nel WalletWrapper
+    \item WalletWrapper: serve per abbassare l'accoppiamento delle classi. Contiene il TransactionConfidenceEventListener, all'interno del quale è implementata la funzione che smista le varie transazioni nelle categorie appropriate: transazioni finalizzate all'acquisto diretto dei dati (confermate o non confermate) oppure transazioni destinate alla ricarica del credito dell'utente (confermate o meno).
+    \item ??? TransactionResource: risorsa REST già esposta nel paragrafo \ref{c:integr:webrest}.
 \end{itemize}
 
-Cascata di codice e diagrammi!
+metodi per:
+- inserire le ricariche nel db
+- confermarle
+- prendere le readAPIkeys memorizzate nel db
+- rendere disponibili
+...
+
+
+
+Una volta aggiunte queste classi, il diagramma delle classi finale è quello mostrato in figura \ref{f:integr:diagrammafinale} 
+
+\begin{figure}[h!t]
+\centerline{\includegraphics[width=\textwidth]{img/finalModelCorrect}}
+\caption{Diagramma delle classi del GRIDS System completo di blockchain}
+\label{f:integr:diagrammafinale}
+\end{figure}
+
 
 \section{Casi d'uso}
 \label{c:integr:useCase}
@@ -301,9 +324,9 @@ Qui di seguito sono elencati i principali casi d'uso del GRIDS System con blockc
 \subsection{Acquisto standard}
 
 \begin{figure}[h!t]
-\centerline{\includegraphics[width=\textwidth]{img/gui-final-client}}
+\centerline{\includegraphics[width=\textwidth]{img/gui-standard-buy}}
 \caption{Interfaccia grafica acquisto standard}
-\label{f:integr:gui-final-client}
+\label{f:integr:gui-standard-buy}
 \end{figure}
 
 \subsection{Ricarica}
