@@ -20,16 +20,18 @@ In Bitcoin Core\footnote{https://bitcoin.org/en/bitcoin-core/} il limite di tran
 In ogni caso la piattaforma possiede il meccanismo di recharge, quindi il problema viene aggirato in maniera semplice ed efficace.
 
 %%
-Un'altra importante precisazione da fare è che il mempool error si può verificare quando è un singolo wallet a generare troppe transazioni di seguito, non quando sono tanti wallet a generare meno transazioni: ciò significa che la rete SIoT non costituisce \textit{bottleneck}. In condizioni di utilizzo normale da parte di un utente qualsiasi, difficilmente saranno mandate così tante richieste
+Un'altra importante precisazione da fare è che il mempool error si può verificare quando è un singolo wallet a generare troppe transazioni di seguito: ciò significa che la rete SIoT non costituisce \textit{bottleneck}. In condizioni di utilizzo normale da parte di un utente qualsiasi, non saranno mandate così tante richieste di dati.
 %%
-
-La prima prova ha dato dei risultati per quato riguarda il delay end-to-end e quello client-side, dei quali sono rappresentate rispettivamente le CDF, ossia la distribuzione cumulativa di probabilità, nelle figure \ref{f:calcoli:end2end} e \ref{f:calcoli:client}. 
 
 \begin{figure}[h!t]
 \centerline{\includegraphics[width=\textwidth]{img/end-to-endGIUSTO}}
 \caption{CDF dei delay end-to-end delle transazioni}
 \label{f:calcoli:end2end}
 \end{figure}
+
+La prima prova ha dato dei risultati per quanto riguarda il delay end-to-end e quello client-side, dei quali sono rappresentate rispettivamente le CDF, ossia la distribuzione cumulativa di probabilità, nelle figure \ref{f:calcoli:end2end} e \ref{f:calcoli:client}. 
+
+
 
 Il client-side delay tende ad assumere una distribuzione normale: il grafico, infatti, ricorda molto quello di una \textit{normal function}. 
 L'end-to-end delay, invece, presenta valori temporali molto più ampi, visto che è compreso il tempo della conferma delle transazioni. La discontinuità che si osserva nel grafico è causata dal fatto che una parte delle transazioni sono state incluse in un blocco, mentre un'altra parte è stata confermata nel blocco successivo. Da notare, inoltre, che il gradino presenta una durata di 5 minuti anzichè di 20, come ci si aspetterebbe dal tempo medio di creazione dei blocchi.
@@ -40,7 +42,7 @@ L'end-to-end delay, invece, presenta valori temporali molto più ampi, visto che
 \label{f:calcoli:client}
 \end{figure}
 
-Le instant buy, infatti, presentano ritardi molto contenuti, com'era auspicabile. Da notare che il punto con ritardo più alto corrisponde alla prima richiesta.
+Le instant buy, invece, presentano ritardi molto contenuti, com'è possibile vedere in figura \ref{f:calcoli:instant}. Da notare che il punto con ritardo più alto corrisponde alla prima richiesta.
 
 Infine, confrontando i valori temporali delle transazioni standard e delle instant buy, si può osservare un considerevole aumento delle performance, nello specifico del 99\%.
 

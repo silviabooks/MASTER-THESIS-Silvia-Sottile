@@ -1,13 +1,16 @@
 \section{Modello teorico}
 \label{c:integr:model}
 
-Prima di cominciare lo sviluppo, è di vitale importanza pensare al modello di integrazione della blockchain nel sistema, rappresentato in figura \ref{f:integr:modello}. 
-
-%% METTERE IMMAGINE DEL MODELLO FINALE
-% per l'immagine si fa una nuvoletta che rappresenta la siot, con dei cerchi che rappresentano i Server. i final client si connettono ai Server e le piattaforme 
+Prima di cominciare lo sviluppo, è di vitale importanza pensare al modello di integrazione della blockchain nel sistema, rappresentato in figura \ref{f:integr:modellone}. 
 
 Verrà creata un'applicazione che sarà utilizzata dall'utente finale per comprare i dati dei nodi della rete. 
 Ognuna di esse è in grado di effettuare le transazioni, che saranno poi incluse nella blockchain. Ogni utente, attraverso l'applicazione, si connette con un nodo Server del GRIDS System. Quest'ultimo è incaricato di prendere i dati delle SVE che ospita (il Server stesso o gli altri Server della rete SIoT), attraverso i meccanismi di discovery descritti nel capitolo \ref{c:grids}, e di restituire i risultati all'utente finale. 
+
+\begin{figure}[h!t]
+\centerline{\includegraphics[width=\textwidth]{img/modellone}}
+\caption{Modello dello Store}
+\label{f:integr:modellone}
+\end{figure}
 
 I proprietari dei nodi virtualizzati ed esposti attraverso la rete SIoT riceveranno il denaro virtuale, ma il GRIDS System terrà per sè una piccola percentuale del prezzo presentato all'utente finale.
 
@@ -17,7 +20,8 @@ In sostanza, non vengono acquistati i dati direttamente dal sensore, ma viene ag
 
 I casi d'uso con cui verrà effettuato il testing riguarderanno un nodo Server del GRIDS System e un Client, ma sarà possibile utilizzare il sistema con una rete di Server e con Client multipli.
 
-Sarà sviluppato, inoltre, un meccanismo di "ricarica" che permetterà al sistema di aggirare i tempi di conferma delle transazioni, che come sappiamo sono una caratteristica imprescindibile di qualsiasi blockchain, con il quale i client potranno effettuare un'unica transazione più grande e successivamente attingere dal credito residuo ogni qual volta desiderano acquisire dati dal sistema.
+Sarà sviluppato, infine, un meccanismo di "ricarica" che permetterà al sistema di aggirare i tempi di conferma delle transazioni, che come sappiamo sono una caratteristica imprescindibile di qualsiasi blockchain, con il quale i client potranno effettuare un'unica transazione più grande e successivamente attingere dal credito residuo ogni qual volta desiderano acquisire dati dal sistema.
+
 
 \section{Scelta della Blockchain}
 \label{c:integr:lib}
@@ -37,7 +41,7 @@ Un'altra feature della rete Bitcoin che ha influito positivamente sulla scelta d
 \subsection{Bitcoinj}
 \label{c:integr:lib:bitcoinj}
 
-Bitcoinj è una libreria per lavorare con il protocollo Bitcoin. Può mantenere un wallet, inviare/ricevere transazioni senza aver bisogno di una copia locale di Bitcoin Core e ha molte altre caratteristiche avanzate. È implementata in Java, ma può essere utilizzato da qualunque linguaggio di programmazione JVM-compatible (come JavaScript).
+Bitcoinj è una libreria per lavorare con il protocollo Bitcoin. Può mantenere un wallet, inviare/ricevere transazioni senza aver bisogno di una copia locale di Bitcoin Core e ha molte altre caratteristiche avanzate. È implementata in Java, ma può essere utilizzato da qualunque linguaggio di programmazione \textit{JVM-compatible}.
 
 Una caratteristica peculiare di Bitcoinj è la presenza della \textit{Simplified Payment Verification} (SPV): in questa modalità viene scaricata solo una piccola parte della blockchain, quindi è possibile utilizzare la libreria in dispositivi constrained, come i nodi dell'IoT. 
 
@@ -292,22 +296,14 @@ Il \textit{Transaction Manager} è lo strato software in cui vengono implementat
 Il Transaction Manager che si trova all'interno del nodo Server del GRIDS System è composto dalle seguenti classi Java:
 
 \begin{itemize}
-    \item TrxManager: contiene tutti i metodi per l'accesso al database
-    \item SIoTBitcoinClient: è il TrxClient, viene incapsulato nel WalletWrapper
+    \item TrxManager: contiene tutti i metodi per l'accesso al database, come ad esempio quelli per inserire le ricariche e confermarle una volta che sono state incluse nella blockchain, oppure rendere disponibili le readAPIkeys agli autenti che hanno effettuato la transazione corrispondente;
+    \item SIoTBitcoinClient: analogo del BitcoinClient mostrato nel paragrafo \ref{c:integr:wallet}, viene incapsulato nel WalletWrapper;
     \item WalletWrapper: serve per abbassare l'accoppiamento delle classi. Contiene il TransactionConfidenceEventListener, all'interno del quale è implementata la funzione che smista le varie transazioni nelle categorie appropriate: transazioni finalizzate all'acquisto diretto dei dati (confermate o non confermate) oppure transazioni destinate alla ricarica del credito dell'utente (confermate o meno).
-    \item ??? TransactionResource: risorsa REST già esposta nel paragrafo \ref{c:integr:webrest}.
+    \item TransactionResource: risorsa REST già esposta nel paragrafo \ref{c:integr:webrest}.
 \end{itemize}
 
-metodi per:
-- inserire le ricariche nel db
-- confermarle
-- prendere le readAPIkeys memorizzate nel db
-- rendere disponibili
-...
 
-
-
-Una volta aggiunte queste classi, il diagramma delle classi finale è quello mostrato in figura \ref{f:integr:diagrammafinale} 
+Una volta aggiunte queste classi, il diagramma delle classi finale è quello mostrato in figura \ref{f:integr:diagrammafinale}.
 
 \begin{figure}[h!t]
 \centerline{\includegraphics[width=\textwidth]{img/finalModelCorrect}}
@@ -315,11 +311,54 @@ Una volta aggiunte queste classi, il diagramma delle classi finale è quello mos
 \label{f:integr:diagrammafinale}
 \end{figure}
 
+Il punto del Transaction Manager che merita particolare attenzione è la funzione di monitoraggio della TransactionConfidence, riportato in sintesi nel listing \ref{listener-code}.
+
+\begin{lstlisting}[caption={Transaction Confidence Event Listener},label={listener-code},style={c}]
+
+new TransactionConfidenceEventListener() {
+@Override
+public void onTransactionConfidenceChanged(Wallet wallet, Transaction tx) {
+    boolean isRcvAddress = false;
+    boolean isChargeAddress = false;
+    ...
+    /* Get the destination wallet address and verify if it is the normal address or the charge one */
+    
+    // Differentiate actions: CREDIT CHARGE TRANSACTION
+    if (isChargeAddress) {
+        // Confirmation control
+        TransactionConfidence confidence = tx.getConfidence();
+        int depth = confidence.getDepthInBlocks();
+        String trxString = tx.getHashAsString();
+        if (depth == 0) { // The trx isn't in the Blockchain yet
+            // Verify if the hash is present
+            if (unconfirmedTrxs.add(trxString)) {
+                // if it wasn't there, add it in the set and in the DB
+                ...
+            }
+            // if it was there, nothing to do
+        } else { // The trx has been inserted in the Blockchain
+            // if it isn't in the set, do nothing
+            // otherwise, delete it from the set and from the DB
+            ...
+        }
+    }
+
+    // NORMAL TRANSACTION
+    if (isRcvAddress && /* Money are sent to me */) {
+        TransactionConfidence confidence = tx.getConfidence();
+        
+        /* Confirmation control same as above */
+        ...
+    }
+}
+
+\end{lstlisting}
+
 
 \section{Casi d'uso}
 \label{c:integr:useCase}
 
-Qui di seguito sono elencati i principali casi d'uso del GRIDS System con blockchain. ??Il primo caso da considerare è l'acquisto dei dati a seguito dell'invio di bitcoin all'indirizzo del wallet del nodo Server. Il secondo caso è la ricarica del credito dell'utente, mentre il terzo consiste nella richiesta di dati con il credito residuo dell'utente??.
+Qui di seguito sono elencati i principali casi d'uso del GRIDS System con blockchain. Il primo caso da considerare è l'acquisto dei dati a seguito dell'invio di bitcoin all'indirizzo del wallet del nodo Server. Il secondo caso, invece, è il processo di ricarica del credito dell'utente, mentre il terzo consiste nella richiesta di dati con il credito residuo.
 
 \subsection{Acquisto standard}
 
@@ -339,8 +378,4 @@ Qui di seguito sono elencati i principali casi d'uso del GRIDS System con blockc
 
 \subsection{Acquisto veloce}
 
-
-ALTRO:
-
-- dire del problema che bisogna aspettare la conferma delle trx di volta in volta, quindi si è pensato di velocizzare l'acquisto dei dati con metodo "a ricarica".
 

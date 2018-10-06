@@ -1,23 +1,39 @@
-Il paradigma dell'Internet of Things ha aperto la strada verso un mondo in cui i nostri oggetti di uso comune saranno interconnessi e interagiranno con l'ambiente esterno per raccogliere informazione e automatizzare task, come ad esempio l'accensione di luci in una casa, l'azionamento di sistemi di irrigazione e così via. Questa visione implica una serie di feature, come autenticazione, privacy dei dati, sicurezza, robustezza agli attacchi, sviluppo agevole delle applicazioni e self-maintenance\cite{Fernandez-Carames2018}.
+Il paradigma dell'Internet of Things ha aperto la strada verso un mondo in cui gli oggetti di uso comune saranno interconnessi e interagiranno con l'ambiente esterno per raccogliere informazioni e automatizzare task, come ad esempio l'accensione di luci in una casa, l'azionamento di sistemi di irrigazione e così via. Questa visione implica una serie di requisiti, come autenticazione, privacy dei dati, sicurezza, robustezza agli attacchi, sviluppo agevole delle applicazioni e self-maintenance\cite{Fernandez-Carames2018}.
 
-Queste caratteristiche possono essere implementate attraverso l'uso della \textit{Blockchain}, una tecnologia nata insieme alla famosa criptovaluta \textit{Bitcoin}. 
+In tempi recenti, tra i molteplici modi proposti per implementare questi requisiti si è pensato alla possibilità di utilizzare la \textit{Blockchain}, una tecnologia nata insieme alla famosa criptovaluta \textit{Bitcoin}. 
+Pubblicato nel 2008, il white paper che ne descrive il funzionamento porta il nome di Satoshi Nakamoto\cite{Nakamoto2008}. Tuttora non è chiaro che egli sia, non è neanche certo che si tratti di una persona sola.
 
-Pubblicato nel 2008, il white paper\cite{Nakamoto2008} che ne descrive il funzionamento porta il nome di Satoshi Nakamoto. Tuttora non è chiaro che egli sia, non è neanche certo che si tratti di una persona sola. \\
+Ma vediamo prima di tutto di capire che cos’è la blockchain. Per alcuni, la blockchain è la nuova generazione di Internet, o meglio ancora è la \textit{Nuova Internet}. Si ritiene anche che possa rappresentare una sorta di \textit{Internet delle Transazioni}. E per coloro che guardano oltre al concetto di transazione, la Blockchain può rappresentare l'\textit{Internet del Valore}. Al di là delle nozioni di transazione e di valore, però, la blockchain è la rappresentazione digitale di quattro concetti:
+\begin{itemize}
+    \item \textit{decentralizzazione}: non esiste un'entità, come una banca, che detiene un controllo centralizzato, ma vi è invece una rete peer-to-peer di nodi che partecipano attivamente alla costruzione della blockchain;
+    \item \textit{trasparenza}: le transazioni effettuate attraverso la blockchain sono visibili a tutti i partecipanti;
+    \item \textit{sicurezza}: grazie all'impiego di tecniche di hashing e cifratura, la blockchain gode di un livello di sicurezza estremamente alto, il che la rende praticamente immune a qualsiasi attacco;
+    \item \textit{immutabilità}: le transazioni incluse nella blockchain sono definitive, e non vi è alcuna possibilità che possano essere modificate o annullate.
+\end{itemize}
 
-\\ *** ALTRE PUPPETTE **** \\
+Per altri ancora, infine, è la chiara declinazione in digitale di un nuovo concetto di \textit{Trust}. \`E per queste ragioni alcuni ritengono che la blockchain possa assumere anche un valore per certi aspetti di tipo “politico”, come piattaforma che consente lo sviluppo e la concretizzazione di una nuova forma di democrazia, realmente distribuita e in grado di garantire a tutti la possibilità di verificare, di “controllare”, di disporre di una totale trasparenza sugli atti e sulle decisioni, che vengono registrati in archivi immutabili e condivisi che hanno caratteristica di essere inalterabili, immodificabili e dunque immuni da corruzione.
 
-\\
-%% PIÙ PUPPETTE %%
+Negli ultimi anni è stata ipotizzata la possibilità che gran parte delle industrie, ma anche il mondo dei servizi, potrebbe trarre benefici più o meno eclatanti dall’impiego della \textit{distributed ledger technology}\cite{Dieterich2017}.
+Qui di seguito sono elencati alcuni dei tantissimi settori in cui la blockchain può essere utilizzata al meglio.
 
-Questo lavoro di tesi si concentra sull'integrazione della blockchain in un sistema basato sulla Social Internet of Things, il GRIDS (Generic Resilient Identity Services) System, il quale permette di migliorare le operazioni di mapping ID-to-locator attraverso la navigazione del grafo SIoT creato dalle relazioni che si stabiliscono tra gli oggetti.
+\begin{itemize}
+    \item Scuola e mondo accademico: è possibile implementare strumenti basati su questa tecnologia per assicurare una maggior trasparenza della gestione dei certificati accademici e nella trascrizioni di lauree e diplomi. Inquesto modo, le frodi afferenti a questo tipo di applicazioni potrebbero essere più facilmente combattute.
+    \item Legittimazione del voto elettorale. Le elezioni richiedono l’autenticazione dell’identità degli elettori, la conservazione in sicurezza dei registri (utile per tenere traccia dei voti) e un’attività di spoglio e conteggio assolutamente trasparente per determinare il vincitore. Le blockchain possono servire come strumento utile per la selezione, il monitoraggio e il conteggio dei voti, sgomberando il campo da qualsiasi probabile tentativo di frode elettorale, trucchetti o perdita di dati e voti.
+    \item Musica online e diritti d'autore. L'impiego della blockchain permetterebbe agli utenti di ascoltare musica e  pagare direttamente gli artisti, senza ricorrere ad alcun tipo di intermediario, proteggendo al tempo stesso la loro proprietà intellettuale.
+    \item Supply Chain Management. Le catene di approvvigionamento e fornitura sono fondamentalmente una serie di nodi transazionali che permettono di trasferire e spostare i prodotti dalla fabbrica al punto vendita. Grazie a questa tecnologia, infatti le transazioni che intercorrono tra i diversi operatori di una filiera (dalla produzione alla vendita) potranno essere documentate in un registro decentralizzato riducendo così i costi di trascrizione, i ritardi e i possibili errori umani.
+    \item Networking e IoT. La blockchain servirebbe come un libro mastro pubblico per una massiccia quantità di dispositivi e questo permetterebbe di bypassare l’utilizzo di un hub centrale per gestire e mediare la comunicazione tra loro. Anche senza un sistema di controllo centrale per identificarsi l’un l’altro, quindi, i dispositivi IoT saranno in grado di comunicare tra loro in modo autonomo per gestire gli aggiornamenti del software, errori, oppure ottimizzare i consumi energetici.
+\end{itemize}
 
-Il capitolo \ref{c:tec} parla dello stato dell'arte: per quanto riguarda l'Internet of Things, verrà fatta una veloce panoramica sulla sua evoluzione, con una particolare attenzione sulla Social IoT, citando inoltre alcune piattaforme di virtualizzazione. Verranno presentate anche le caratteristiche principali della blockchain, portando come esempio la rete Bitcoin con il suo algoritmo per il raggiungimento del consenso distribuito \textit{Proof of Work}. 
-Saranno introdotti anche elementi di crittografia, fondamentale per poter capire appieno il funzionamento della blockchain.
+\`E proprio sull'ultimo punto che si concentra questo lavoro di tesi. Esso riguarda sull'integrazione della blockchain nel GRIDS System (\textit{Generic Resilient Identity Services}), che permette di migliorare le operazioni di mapping ID-to-locator attraverso la navigazione del grafo SIoT creato dalle relazioni che si stabiliscono tra gli oggetti. 
 
-Verrà descritto il GRIDS System nel capitolo \ref{c:grids}, con particolare attenzione sull'architettura e sull'implementazione in Java....
+La tesi è organizzata nel seguente modo: nel capitolo \ref{c:tec} verrà trattato lo stato dell'arte. Per quanto riguarda l'Internet of Things, verrà fatta una veloce panoramica sulla sua evoluzione, con una particolare attenzione sulla Social IoT, citando inoltre alcune piattaforme di virtualizzazione. 
+Successivamente verranno presentate le caratteristiche principali della blockchain, portando come esempio la rete Bitcoin con il suo algoritmo per il raggiungimento del consenso distribuito \textit{Proof of Work}.
+Saranno infine introdotti alcuni elementi di crittografia, fondamentali per poter comprendere appieno il funzionamento della blockchain.
 
-Il capitolo \ref{c:integr} costituisce la parte centrale del lavoro: saranno coomentati i passi eseguiti per l'integrazione della blockchain nel sistema, dalla scelta della blockchain stessa, all'interfaccia grafica per l'interazione dell'utente con il GRIDS System, con particolare attenzione rivolta alle scelte implementative. Per contestualizzare il lavoro, sono anche descritti i principali casi d'uso.
+Nel capitolo \ref{c:grids} verrà descritto il GRIDS System, con particolare attenzione sull'architettura e sull'implementazione, realizzata nel linguaggio Java e con l'aiuto delle tecnologie REST e RMI.
 
-Il capitolo successivo, invece, si concentra sulla valutazione delle performance, mettendo a confronto i risultati ottenuti dai vari casi d'uso.
+Il capitolo \ref{c:integr} costituisce la parte centrale del lavoro: saranno commentati i passi eseguiti per l'integrazione della blockchain nel sistema, dalla scelta della blockchain stessa, all'interfaccia grafica per l'interazione dell'utente con il GRIDS System, prestando particolare attenzione alle scelte implementative effettuate. Per contestualizzare il lavoro, verranno inoltre presentati i principali casi d'uso che si prevedono per il sistema.
 
-Per concludere, nel capitolo \ref{c:end} verranno suggeriti dei potenziali sviluppi futuri per migliorare ulteriormente il sistema.
+La valutazione delle performance e il confronto tra i risultati ottenuti nei vari casi d'uso sono riportati nel capitolo \ref{c:eval}.
+
+Per concludere, nel capitolo \ref{c:end} verranno riassunti i risultati raggiunti e suggeriti dei potenziali sviluppi futuri per migliorare ulteriormente il sistema.
